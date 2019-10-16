@@ -2,15 +2,15 @@
   <div class="comment-container">
     <h4>发表评论</h4>
     <hr>
-    <textarea maxlength="120" placeholder="请输入要评论的内容(最多120字)"></textarea>
-    <mt-button type="primary" size="large">发表评论</mt-button>
+    <textarea maxlength="120" placeholder="请输入要评论的内容(最多120字)" v-model="content"></textarea>
+    <mt-button type="primary" size="large" @click="postComment">发表评论</mt-button>
     <div class="cmt-list">
-      <div class="cmt-item" v-for="(item,i) in comments" :key="item.add_time">
+      <div class="cmt-item" v-for="(item,i) in comments" :key="i">
         <div class="cmt-header">
           第{{i+1}}楼&nbsp;&nbsp;用户：{{item.user_name}}&nbsp;&nbsp;发表时间：{{item.add_time | dateFormat}}
         </div>
         <div class="cmt-body">
-          {{item.content === 'undefined'?'此用户很懒，什么都没说' : item.content}}
+          {{item.content === ''?'此用户很懒，什么都没说' : item.content}}
         </div>
       </div>
     </div>
@@ -24,9 +24,9 @@
   export default {
     data() {
       return {
-        id: this.$route.params.id,
         pageIndex: 1,
-        comments: []
+        comments: [],
+        content: ''
       }
     },
     created() {
@@ -46,8 +46,24 @@
       getMore() {
         this.pageIndex++;
         this.getComments()
+      },
+      postComment() {
+        const url = '/api/postcomment/' + this.id;
+        if (this.content.trim() === '' || this.content.trim().length === 0) {
+          return Toast('评论内容为空');
+        }
+        this.$http.post(url, {artid: this.id, content: this.content}).then(res => {
+          if (res.data.status === 0) {
+            Toast('评论发表成功');
+            this.comments.unshift({user_name: '匿名用户', add_time: new Date(), content: this.content});
+            this.content = ''
+          } else {
+            Toast('评论发表失败');
+          }
+        })
       }
-    }
+    },
+    props: ['id']
   }
 </script>
 
