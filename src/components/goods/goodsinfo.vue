@@ -65,7 +65,7 @@
         list: [],
         goodsinfo: {},
         ballFlag: false,
-        selectedCount:1
+        selectedCount: 1
       }
     },
     created() {
@@ -99,8 +99,9 @@
         this.$router.push({name: 'goodsComment', params: {id: id}})
       },
       addToCart() {
-        this.ballFlag = true
-
+        this.ballFlag = true;
+        const goodsinfo = {id: this.id, count: this.selectedCount, price: this.goodsinfo.sell_price, selected: true};
+        this.$store.commit('addCount', goodsinfo)
       },
       beforeEnter(el) {
         el.style.transform = "translate(0,0)"
@@ -120,7 +121,7 @@
       afterEnter(el) {
         this.ballFlag = !this.ballFlag
       },
-      getSelectCount(count){
+      getSelectCount(count) {
         this.selectedCount = count;
       }
     },
