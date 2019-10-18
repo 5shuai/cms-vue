@@ -4,7 +4,8 @@
       <div class="mui-card">
         <div class="mui-card-content">
           <div class="mui-card-content-inner">
-            <mt-switch v-model="value" @click="show"></mt-switch>
+            <mt-switch v-model="$store.getters.getGoodsSelected[item.id]"
+                       @change="selectedChange(item.id,$store.getters.getGoodsSelected[item.id])"></mt-switch>
             <img :src="item.thumb_path" alt="">
             <div class="box">
               <h1>{{item.title}}</h1>
@@ -17,12 +18,17 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="mui-card">
-        <div class="mui-card-content">
-          <div class="mui-card-content-inner">
-            这是一个最简单的卡片视图控件；卡片视图常用来显示完整独立的一段信息，比如一篇文章的预览图、作者信息、点赞数量等
+
+    <div class="mui-card">
+      <div class="mui-card-content">
+        <div class="mui-card-content-inner jiesuan">
+          <div class="left">
+            <p>总计运费</p>
+            <p>已勾选商品 <span class="red">{{$store.getters.getGoodsCountAndPrice.count}}</span> 件， 总价 <span class="red">￥{{$store.getters.getGoodsCountAndPrice.price}}</span> 元</p>
           </div>
+          <mt-button type="danger">去结算</mt-button>
         </div>
       </div>
     </div>
@@ -61,11 +67,14 @@
             this.list = res.data.message;
           }
         })
-
       },
       remove(id, index) {
         this.list.splice(index, 1);
         this.$store.commit('removeFormCar', id)
+      },
+      selectedChange(id, status) {
+        const obj = {id: id, status: status};
+        this.$store.commit('updateSelectedStatus', obj)
       }
     },
     components: {
@@ -107,6 +116,18 @@
         }
       }
 
+    }
+
+    .jiesuan {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .red {
+        color: red;
+        font-size: 16px;
+        font-weight: bold;
+      }
     }
   }
 </style>

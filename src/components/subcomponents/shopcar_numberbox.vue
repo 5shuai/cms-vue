@@ -20,7 +20,6 @@
     methods: {
       countChange() {
         const goodsinfo = {id: this.goodsId, count: this.$refs.numbox.value};
-        console.log(goodsinfo);
         this.$store.commit('updateGoodsInfo', goodsinfo)
       }
     },

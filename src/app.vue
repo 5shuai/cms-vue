@@ -49,7 +49,6 @@
       }
     },
     watch: {
-
       "$route.path": function (newVal, oldVal) {
         this.flag = newVal !== '/home';
       }

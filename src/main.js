@@ -61,6 +61,15 @@ var store = new vuex.Store({
         }
       });
       localStorage.setItem('car', JSON.stringify(state.car))
+    },
+    updateSelectedStatus(state, statusObj) {
+      state.car.some(item => {
+        if (item.id === statusObj.id) {
+          item.selected = statusObj.status;
+          return true;
+        }
+      });
+      localStorage.setItem('car', JSON.stringify(state.car))
     }
   },
   getters: {
@@ -77,6 +86,23 @@ var store = new vuex.Store({
         o[item.id] = item.count
       });
       return o
+    },
+    getGoodsSelected(state) {
+      let o = {};
+      state.car.forEach(item => {
+        o[item.id] = item.selected;
+      });
+      return o;
+    },
+    getGoodsCountAndPrice(state) {
+      let obj = {count: 0, price: 0};
+      state.car.forEach(item => {
+        if (item.selected === true) {
+          obj.count += item.count;
+          obj.price += item.price * item.count
+        }
+      });
+      return obj;
     }
   }
 });
